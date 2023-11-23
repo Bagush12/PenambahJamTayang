@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Video YouTube</title>
+</head>
+<body>
+    <div class="container">
+        <form id="videoForm">
+            <label for="videoLink">Enter YouTube Video Link:</label>
+            <input type="text" id="videoLink" placeholder="https://www.youtube.com/watch?v=YOUR_VIDEO_ID">
+            <label for="videoCount">Enter Number of Videos:</label>
+            <input type="number" id="videoCount" value="1" min="1">
+            <button type="button" onclick="loadVideos()">Load Videos</button>
+        </form>
+        <div id="videoContainer"></div>
+
+        <script>
+            function loadVideos() {
+                var videoContainer = document.getElementById('videoContainer');
+                var videoLinkInput = document.getElementById('videoLink');
+                var videoCountInput = document.getElementById('videoCount');
+
+                // Get the YouTube video ID from the input link
+                var videoId = getYouTubeVideoId(videoLinkInput.value);
+
+                if (!videoId) {
+                    alert('Invalid YouTube Video Link');
+                    return;
+                }
+
+                // Get the number of videos to display
+                var videoCount = parseInt(videoCountInput.value);
+
+                // Clear existing content in the video container
+                videoContainer.innerHTML = '';
+
+                // Loop to create iframes dynamically based on the videoCount
+                for (var i = 0; i < videoCount; i++) {
+                    var videoIframe = document.createElement('iframe');
+                    videoIframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+                    videoIframe.frameBorder = 0;
+                    videoIframe.allow = 'autoplay; encrypted-media';
+                    videoIframe.allowFullscreen = true;
+
+                    var videoDiv = document.createElement('div');
+                    videoDiv.classList.add('video-container');
+                    videoDiv.appendChild(videoIframe);
+
+                    videoContainer.appendChild(videoDiv);
+                }
+            }
+
+            // Function to extract YouTube video ID from a YouTube URL
+            function getYouTubeVideoId(url) {
+                var videoIdMatch = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+                return videoIdMatch ? videoIdMatch[1] : null;
+            }
+        </script>
+    </div>
+</body>
+</html>
